@@ -1,19 +1,9 @@
-//
-//  ToDoListViewController.swift
-//  toDoList
-//
-//  Created by Guilherme Silveira de Souza on 29/01/25.
-//
-
 import UIKit
 
 class ToDoListViewController: UIViewController {
-    private lazy var containerView: UIView = {
-        let view = UIView(frame: .zero)
-        view.backgroundColor = .white
-        return view
-    }()
+    private let viewModel: ToDoListViewModel
     
+    // MARK: - UI Components
     private lazy var addButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "addIcon"), for: .normal)
@@ -28,61 +18,71 @@ class ToDoListViewController: UIViewController {
     
     private lazy var textToDo: UILabel = {
         let label = UILabel()
-        label.text = ""
+        label.text = "Task"
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.textColor = .black
         return label
     }()
     
-    private lazy var check: UIImage = {
-        let image = UIImage(named: "checkBoxIcon")!
-        return image
+    private lazy var check: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "checkIcon")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
     }()
     
-    // MARK: - ViewModel
-    private var viewModel: ToDoListViewModel?
-    
+    // MARK: - Init
+    init(viewModel: ToDoListViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    // MARK: - LifeCycle
     override func viewDidLoad() {
+//        print("viewDidLoad ta carregando caralho")
         super.viewDidLoad()
+        view.backgroundColor = .white
         setupViews()
         setupConstraints()
     }
     
+    // MARK: - Setup UI
     private func setupViews() {
-        containerView.addSubview(addButton)
-        containerView.addSubview(checkBox)
-        containerView.addSubview(textToDo)
-        view.addSubview(containerView)
+//        print("vaaaaaaa corinthians")
+        view.addSubview(addButton)
+        view.addSubview(checkBox)
+        view.addSubview(textToDo)
+        view.addSubview(check)
     }
     
     private func setupConstraints() {
-        containerView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            containerView.topAnchor.constraint(equalTo: view.topAnchor),
-            containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            containerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-        
         addButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            addButton.topAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.topAnchor, constant: 16),
-            addButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-            addButton.widthAnchor.constraint(equalToConstant: 44),
-            addButton.heightAnchor.constraint(equalToConstant: 44)
-        ])
-        
         checkBox.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            checkBox.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-            checkBox.topAnchor.constraint(equalTo: addButton.bottomAnchor, constant: 16),
-            checkBox.widthAnchor.constraint(equalToConstant: 24),
-            checkBox.heightAnchor.constraint(equalToConstant: 24)
-        ])
-        
         textToDo.translatesAutoresizingMaskIntoConstraints = false
+        check.translatesAutoresizingMaskIntoConstraints = false
+        
         NSLayoutConstraint.activate([
-            textToDo.centerYAnchor.constraint(equalTo: checkBox.centerYAnchor),
+            addButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            addButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            addButton.widthAnchor.constraint(equalToConstant: 44),
+            addButton.heightAnchor.constraint(equalToConstant: 44),
+
+            checkBox.topAnchor.constraint(equalTo: addButton.bottomAnchor, constant: 16),
+            checkBox.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            checkBox.widthAnchor.constraint(equalToConstant: 44),
+            checkBox.heightAnchor.constraint(equalToConstant: 44),
+
             textToDo.leadingAnchor.constraint(equalTo: checkBox.trailingAnchor, constant: 8),
-            textToDo.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16)
+            textToDo.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+
+            check.centerXAnchor.constraint(equalTo: checkBox.centerXAnchor),
+            check.centerYAnchor.constraint(equalTo: checkBox.centerYAnchor),
+            check.widthAnchor.constraint(equalToConstant: 22),
+            check.heightAnchor.constraint(equalToConstant: 22)
         ])
     }
 }
