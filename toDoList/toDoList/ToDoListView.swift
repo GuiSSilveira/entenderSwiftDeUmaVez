@@ -8,9 +8,8 @@
 import SwiftUI
 
 struct ToDoListView: View {
-    @State private var tasks: [String] = ["Task 1", "Task 2"]
-    @State private var newTask: String = ""
-    
+    @StateObject private var viewModel = ToDoListViewModel() // Criando a ViewModel
+
     var body: some View {
         ZStack {
             // Fundo Branco
@@ -20,9 +19,7 @@ struct ToDoListView: View {
                 // Botão de adicionar
                 HStack {
                     Spacer()
-                    Button(action: {
-                        addTask()
-                    }) {
+                    Button(action: viewModel.addTask) {
                         Image(systemName: "plus")
                             .resizable()
                             .frame(width: 30, height: 30)
@@ -31,43 +28,36 @@ struct ToDoListView: View {
                     .padding()
                 }
                 
-                // Lista de To-Dos
-                VStack(alignment: .leading, spacing: 16) {
-                    ForEach(tasks.indices, id: \.self) { index in
-                        HStack {
-                            Button(action: {
-                                toggleTask(index)
-                            }) {
-                                Image(systemName: "square")
-                                    .resizable()
-                                    .frame(width: 40, height: 40)
-                                    .foregroundColor(.orange)
+                // Adicionando ScrollView para permitir rolagem
+                ScrollView {
+                    LazyVStack(alignment: .leading, spacing: 16) {
+                        ForEach(viewModel.tasks) { task in
+                            HStack {
+                                // Botão de check
+                                Button(action: {
+                                    viewModel.toggleTask(task)
+                                }) {
+                                    Image(systemName: task.isCompleted ? "checkmark.square.fill" : "square")
+                                        .resizable()
+                                        .frame(width: 40, height: 40)
+                                        .foregroundColor(task.isCompleted ? .green : .orange)
+                                }
+                                
+                                // Texto da tarefa com riscado ao completar
+                                Text(task.text)
+                                    .font(.headline)
+                                    .foregroundColor(task.isCompleted ? .gray : .black)
+                                    .strikethrough(task.isCompleted, color: .gray)
+                                
+                                Spacer()
                             }
-                            
-                            Text(tasks[index])
-                                .font(.headline)
-                                .foregroundColor(.black)
-                            
-                            Spacer()
+                            .padding()
                         }
-                        .padding()
                     }
                 }
-                .padding()
-                
-                Spacer()
+                .padding(.horizontal)
             }
         }
-    }
-    
-    // Função para adicionar uma nova tarefa (simples para teste)
-    private func addTask() {
-        tasks.append("New Task")
-    }
-    
-    // Função para marcar/desmarcar a tarefa
-    private func toggleTask(_ index: Int) {
-        // Implementação futura para riscar o texto ao completar a tarefa
     }
 }
 
