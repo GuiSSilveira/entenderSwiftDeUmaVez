@@ -9,9 +9,13 @@ import SwiftUI
 
 @main
 struct ToDoApp: App {
+    @StateObject private var coordinator = ToDoCoordinator()
+
     var body: some Scene {
         WindowGroup {
-            ToDoListView()
+            // Passa o coordenador para a ToDoListView
+            ToDoListView(coordinator: coordinator) // Agora a ToDoListView usa o coordenador
         }
     }
 }
+
