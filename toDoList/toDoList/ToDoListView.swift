@@ -45,7 +45,7 @@ struct ToDoListView: View {
                                                 .foregroundColor(task.isCompleted ? .green : .orange)
                                         }
                                         
-                                        NavigationLink(destination: EditToDoListView(task: task)) {
+                                        NavigationLink(destination: EditToDoListView(task: task, viewModel: viewModel)) {
                                             Text(task.text)
                                                 .font(.headline)
                                                 .foregroundColor(task.isCompleted ? .gray : .black)

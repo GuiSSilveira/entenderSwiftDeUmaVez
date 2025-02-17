@@ -2,18 +2,29 @@ import SwiftUI
 
 class ToDoCoordinator: ObservableObject {
     @Published var currentView: AnyView
-    
+    var viewModel: ToDoListViewModel?
+
+    // Inicialize todas as propriedades no init
     init() {
-        self.currentView = AnyView(EmptyView())
+        // Inicialize a currentView antes de qualquer coisa
+        self.currentView = AnyView(EmptyView())  // Inicializa a currentView
+        
+        // Agora, inicializamos o viewModel
+        self.viewModel = ToDoListViewModel(coordinator: self)  // Inicializa o viewModel depois da currentView
+        
+        // Chama o método para configurar a view inicial
         self.setUpInitialView()
     }
-    
+
     private func setUpInitialView() {
+        // Agora podemos usar self.viewModel, pois já foi inicializado
         self.currentView = AnyView(ToDoListView(coordinator: self))
     }
 
     func showEditTaskView(task: TaskModel) {
-        print("Navegando para EditToDoListView com a tarefa: \(task.text)")
-        self.currentView = AnyView(EditToDoListView(task: task)) // Passando a tarefa diretamente
+        // Certifique-se de que o viewModel foi inicializado antes de usá-lo
+        if let viewModel = self.viewModel {
+            self.currentView = AnyView(EditToDoListView(task: task, viewModel: viewModel))
+        }
     }
 }
